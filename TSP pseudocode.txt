@@ -1,0 +1,71 @@
+Input: Array V containing all vertices
+Output: Array of vertices representing minimum weight Hamiltonian Cycle
+
+//the beginning and ending vertex is considered to be vertex 1
+
+//method setBest(S, i, v) should save the minimum cost path visiting all vertices in set S starting
+//at vertex 1 and ending at vertex i to be v
+setBest({1}, 1, 0)
+//The distance from the starting vertex to itself is to be considered 0
+
+//for all subset sizes from 2 to full length
+for c := 2 to V.length do { //loop efficiency is length of V (O(N))
+
+	//for all subsets of V with length c
+	for S[] in allSubsets(V, c) do { //efficiency of traversing all subsets is (O(2^N))
+	
+		//The path cannot start and end at vertex 1 so give it a sentinel value representing 
+		//infinity to indicate this is an invalid path
+		setBest(S, 1, INFINITY)
+		
+		//for all elements in S
+		for j in S do { //worst case efficiency is when S has V.length elements (O(N))
+		
+			//skip when j is first or last vertex
+			if j = 1 || j = S[S.length - 1] break
+		
+			//save a copy of S without element j in it
+			S = S.remove(j)
+			
+			//method sum() should compute length of given vertex path
+			dist = sum(S) + distance(j, i)
+			//dist is now length of cycle composed of all vertices in S
+			
+			//method min should take a variable amount of values and return the smallest
+			best = min(getBest(S, j), dist)
+			//best now contains the smaller value of the previous and current values for path
+			//S from 1 to j
+			
+			setBest(S, j, best)
+		
+		}
+	
+	}
+
+}
+
+//this value will store weight of minimum cost path
+optimalVal = INFINITY
+
+//this will store the path itself
+optimalPath
+
+//for all vertices in V except 1
+for j := 2 to V.length do {
+
+	temp = getBest(V, j)
+
+	if temp < optimalVal {
+		optimalVal = temp
+		
+		//method path should take a cost value and return the path that yields it which has been
+		//previously saved by the setBest() method
+		optimalPath = path(temp)
+	}
+
+}
+
+return optimalPath
+
+Efficiency: n^2 * 2^n
+O(2^n)
